@@ -5,8 +5,8 @@ Users can log in using Google, save private bookmarks, and see updates reflected
 
 🚀 Live Demo
 
-👉 Live URL: [Add your Vercel URL here]
-👉 GitHub Repo: [Add your GitHub repo link here]
+👉 Live URL: https://smart-bookmarks-amber.vercel.app
+👉 GitHub Repo: https://github.com/pratham13103/smart-bookmarks
 
 ✨ Features
 
