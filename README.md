@@ -1,36 +1,146 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Smart Bookmark App
 
-## Getting Started
+A modern bookmark manager built with Next.js App Router, Supabase, and Tailwind CSS.
+Users can log in using Google, save private bookmarks, and see updates reflected in real time across multiple tabs.
 
-First, run the development server:
+🚀 Live Demo
 
-```bash
+👉 Live URL: [Add your Vercel URL here]
+👉 GitHub Repo: [Add your GitHub repo link here]
+
+✨ Features
+
+Google OAuth authentication (no email/password)
+
+Private bookmarks per user
+
+Add and delete bookmarks
+
+Real-time updates across multiple tabs (no page refresh)
+
+Dark-themed UI with subtle animations
+
+Deployed on Vercel
+
+🛠 Tech Stack
+
+Frontend: Next.js (App Router), React, Tailwind CSS
+
+Backend / Services: Supabase (Auth, Database, Realtime)
+
+Deployment: Vercel
+
+📂 Project Structure
+app/
+ ├─ login/        # Google OAuth login page
+ ├─ dashboard/    # Bookmark dashboard
+ ├─ layout.tsx
+ └─ page.tsx
+lib/
+ └─ supabase.ts   # Supabase client
+
+⚙️ Environment Variables
+
+Create a .env.local file:
+
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+🧪 Running Locally
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Open: http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+🧠 Problems Faced & How I Solved Them
+1. Supabase Insert Errors (400 Bad Request)
 
-## Learn More
+Problem:
+Bookmarks were not being inserted into the database.
 
-To learn more about Next.js, take a look at the following resources:
+Cause:
+The database table was created manually with missing columns (user_id, url) and incorrect Row Level Security (RLS) policies.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Solution:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Recreated the bookmarks table using SQL
 
-## Deploy on Vercel
+Added proper columns
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Enabled RLS
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Added correct SELECT, INSERT, and DELETE policies using auth.uid()
+
+2. Bookmarks Not Updating in Real Time Across Tabs
+
+Problem:
+When adding a bookmark in one tab, it did not appear in another tab unless the page was refreshed.
+
+Cause:
+Supabase Postgres Realtime can be unreliable for same-user sessions when using RLS.
+
+Solution:
+
+Used Supabase Realtime Broadcast channels instead of relying only on postgres_changes
+
+Broadcasted an update event after insert/delete
+
+Other tabs listen to the broadcast and re-fetch bookmarks instantly
+
+This ensured reliable real-time sync across tabs.
+
+3. Hydration Mismatch Warnings in Next.js
+
+Problem:
+Console showed hydration mismatch warnings after login.
+
+Cause:
+A browser extension was injecting attributes into the HTML before React hydration.
+
+Solution:
+
+Verified the issue only occurred with extensions enabled
+
+Confirmed the app renders deterministically
+
+No code change was required (safe to ignore in production)
+
+4. UI Issues in Dark Mode
+
+Problem:
+Some buttons looked like links and input borders were not clearly visible.
+
+Solution:
+
+Applied consistent dark-mode Tailwind styles
+
+Added clear borders and proper button styling
+
+Improved overall contrast and accessibility
+
+📦 Deployment
+
+The app is deployed on Vercel.
+
+Deployment steps:
+
+Push code to GitHub
+
+Import repository into Vercel
+
+Add environment variables in Vercel dashboard
+
+Deploy
+
+📌 Notes
+
+No passwords are stored — authentication is handled securely by Google OAuth via Supabase.
+
+All bookmarks are private and protected using database-level security (RLS).
+
+Real-time updates work without page refresh, even across multiple tabs.
+
+👤 Author
+
+Prathamesh Jaiswal
